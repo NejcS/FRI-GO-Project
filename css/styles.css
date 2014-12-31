@@ -115,10 +115,12 @@ body
 {
     background-color: #151518;
     height: 100vh;
+    overflow: hidden;
 }
 
 .bg
 {
+    background-color: #f00;
     color: #323232;
     font-family: "Inconsolata", "Georgia", serif;
     word-wrap: break-word;

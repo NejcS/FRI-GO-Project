@@ -12,53 +12,145 @@ $(window).bind("load",
 $( document ).ready(
     function()
     {
-        console.log("js ready!");
+        //console.log("js ready!");
         
         
         var defaultWidth  = 1920;
         var defaultHeight = 1080;
         
+        
+        var c = document.getElementById("c");
+        var ctx = c.getContext("2d");
+        
+        c.width  = window.innerWidth;
+        c.height = window.innerHeight;
+        
         var bg = $("#bg");
         
+        // The characters
+        var chars = "01";
         
-        // Loads the bg div with zeros and ones
-        var loadBg = function()
+        var fontSize = 12;
+        var numColumns = c.width / fontSize;
+        
+        var getNumCharsInLine = function(char)
         {
-            bg.width  = defaultWidth;
-            bg.height = defaultHeight;
-            
-            
-            var string = function getNumbers()
+            var measuredTextWidth = 0;
+            var line = "";
+            while ( measuredTextWidth < c.width )
             {
-                var string = "";
-                var numNumbers = 10000;
-                var numbers = "01";
+                line += char;
                 
-                for (var i = 0; i < numNumbers; i++)
-                {
-                    string += numbers.charAt(
-                        Math.floor(
-                            Math.random() * numbers.length
-                        )
-                    );
-                }
-                
-                return string;
+                measuredTextWidth = ctx.measureText( line ).width;
             }
             
-            bg.text(string);
+            return measuredTextWidth;
         }
         
-        var init = function()
+        var generateLine = function()
         {
-            console.log("init");
+            var line = "";
+            var numChars = getNumCharsInLine( "0" );
+            //console.log( numChars );
+            //var chars = "01";
             
-            loadBg();
+            var char;
+            for (var i = 0; i < numChars; i++)
+            {
+                char = chars.charAt(
+                    Math.floor(
+                        Math.random() * chars.length
+                    )
+                );
+                
+                line += char;
+            }
+            
+            return line;
         }
         
-        init();
+        var lines = [];
+        var numLines = c.height / fontSize;
+        for (var i = 0; i < numLines; i++)
+        {
+            line = generateLine();
+            
+            lines[i] = line;
+        }
         
         
+        function generateAlphas(min, max, step)
+        {
+            var arr = [];
+            
+            for (var alpha = min; alpha <= max; alpha += step)
+            {
+                alpha = parseFloat( alpha.toFixed(2) );
+                
+                arr.push( alpha );
+            }
+            for (var alpha = max - step; alpha >= min; alpha -= step)
+            {
+                alpha = parseFloat( alpha.toFixed(2) );
+                
+                arr.push( alpha );
+            }
+            
+            return arr
+        }
+        
+        var alphaMin = 0.6;
+        var alphaMax = 1.0;
+        var alpha = alphaMax;
+        var alphaDelta = 0.02;
+        var lineAlphaMax = 0;
+        
+        var alphas = generateAlphas( alphaMin, alphaMax, alphaDelta );
+        //console.log(alphas);
+        
+        
+        function draw()
+        {
+            ctx.clearRect(
+                0, 0,
+                c.width, c.height
+            );
+            
+            
+            ctx.font = fontSize + "px consolas";
+            
+            
+            if ( lineAlphaMax < lines.length + alphas.length )
+                lineAlphaMax++;
+            else
+                lineAlphaMax = 0;
+            
+            var line;
+            for (var i = 0; i < lines.length; i++)
+            {
+                line = lines[i];
+                
+                alpha = alphaMin;
+                if ( i > lineAlphaMax-alphas.length  &&  i < lineAlphaMax+alphas.length )
+                    alpha = alphas[ i + (alphas.length - 1 - lineAlphaMax) ];
+                
+                ctx.fillStyle = "rgba(50, 50, 50, " + alpha + ")";
+                //ctx.fillStyle = "rgba(50, 50, 50, " + alpha + ")";
+                ctx.fillText(
+                    line,
+                    0,   // X coord
+                    i * fontSize  // Y coord
+                );
+            }
+        }
+        
+        setInterval(
+            draw,
+            33
+        );
+        
+        
+        /*
         $( window ).bind(
             "resize",
             function()
@@ -73,13 +165,14 @@ $( document ).ready(
                 console.log(ratioWidth + " " + ratioHeight);
                 
                 var ratio = ratioWidth;
-                if ( ratioWidth < ratioHeight )
-                    ratio = ratioHeight;
+                //if ( ratioWidth < ratioHeight )
+                //    ratio = ratioHeight;
                 
                 bg.css(
                     "zoom", ratio
                 );
             }
         );
+        */
     }
 );
