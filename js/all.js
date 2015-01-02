@@ -32,29 +32,15 @@ $( document ).ready(
         var chars = "01";
         
         var fontSize = 12;
-        var numColumns = c.width / fontSize;
+        var fontType = "consolas";
+        
         
         var getNumCharsInLine = function(char)
         {
-            /*
-            var measuredTextWidth = 0;
-            var line = "";
-            var i = 0;
-            while ( measuredTextWidth < c.width )
-            {
-                line += char;
-                
-                measuredTextWidth = ctx.measureText( line ).width;
-                
-                i++;
-            }
+            ctx.font = fontSize + "px" + " " + fontType;
             
-            console.log( i );
-            
-            return i;
-            */
-            
-            var num = Math.floor( c.width / ctx.measureText("0").width );
+            var num = Math.ceil( c.width / ctx.measureText("0").width );
+            num++;  // So it covers the right edge
             //console.log( num );
             
             return num - 1;
@@ -81,7 +67,10 @@ $( document ).ready(
         }
         
         var lines = [];
-        var numLines = c.height / fontSize;
+        var numLines = Math.ceil( c.height / fontSize );
+        numLines++;  // So it covers the bottom edge.
+        //console.log(numLines);
+        
         for (var i = 0; i < numLines; i++)
         {
             line = generateLine();
@@ -153,7 +142,8 @@ $( document ).ready(
             );
             
             
-            ctx.font = fontSize + "px consolas";
+            //ctx.font = fontSize + "px consolas";
+            ctx.font = fontSize + "px" + " " + "consolas";
             
             
             if ( lineAlphaMax < lines.length + alphas.length )
