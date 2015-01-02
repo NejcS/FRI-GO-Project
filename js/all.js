@@ -33,6 +33,7 @@ $( document ).ready(
         
         var fontSize = 12;
         var fontType = "consolas";
+        var fontLineSpacing = 2;
         
         
         var getNumCharsInLine = function(char)
@@ -66,8 +67,16 @@ $( document ).ready(
             return line;
         }
         
+        var getNumLines = function()
+        {
+            return Math.ceil( c.height / ( fontSize + fontLineSpacing ) );
+        }
+        
+        
+        // Generate lines
+        
         var lines = [];
-        var numLines = Math.ceil( c.height / fontSize );
+        var numLines = getNumLines();
         numLines++;  // So it covers the bottom edge.
         //console.log(numLines);
         
@@ -107,9 +116,9 @@ $( document ).ready(
             ctx.beginPath();
             ctx.rect(
                 posX * fontCharWidth,
-                ( posY - 1 ) * fontSize * 1.0075,  // 1.0075 is a correction
+                ( posY - 1 ) * ( fontSize + fontLineSpacing ) * 1.0075,  // 1.0075 is a correction
                 string.length * fontCharWidth,
-                1 * fontSize
+                1 * ( fontSize + fontLineSpacing )
             );
             ctx.fillStyle = bgColor;
             ctx.fill();
@@ -118,7 +127,7 @@ $( document ).ready(
             ctx.fillText(
                 string,
                 posX * fontCharWidth,
-                posY * fontSize
+                posY * ( fontSize + fontLineSpacing )
             );
         }
         
@@ -200,8 +209,8 @@ $( document ).ready(
                 ctx.fillStyle = "rgba(70, 70, 70, " + alpha + ")";
                 ctx.fillText(
                     line,
-                    0,            // X coord
-                    i * fontSize  // Y coord
+                    0,                                  // X coord
+                    i * ( fontSize + fontLineSpacing )  // Y coord
                 );
             }
             
