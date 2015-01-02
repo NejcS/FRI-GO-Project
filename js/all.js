@@ -36,16 +36,28 @@ $( document ).ready(
         
         var getNumCharsInLine = function(char)
         {
+            /*
             var measuredTextWidth = 0;
             var line = "";
+            var i = 0;
             while ( measuredTextWidth < c.width )
             {
                 line += char;
                 
                 measuredTextWidth = ctx.measureText( line ).width;
+                
+                i++;
             }
             
-            return measuredTextWidth;
+            console.log( i );
+            
+            return i;
+            */
+            
+            var num = Math.floor( c.width / ctx.measureText("0").width );
+            //console.log( num );
+            
+            return num - 1;
         }
         
         var generateLine = function()
