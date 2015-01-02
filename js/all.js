@@ -51,8 +51,6 @@ $( document ).ready(
         {
             var line = "";
             var numChars = getNumCharsInLine( "0" );
-            //console.log( numChars );
-            //var chars = "01";
             
             var char;
             for (var i = 0; i < numChars; i++)
@@ -99,11 +97,13 @@ $( document ).ready(
             return arr
         }
         
-        var alphaMin = 0.6;
+        var alphaMin = 0.5;
         var alphaMax = 1.0;
         var alpha = alphaMax;
         var alphaDelta = 0.02;
         var lineAlphaMax = 0;
+        
+        var bgNumberChangePerc = 0.99;
         
         var alphas = generateAlphas( alphaMin, alphaMax, alphaDelta );
         //console.log(alphas);
@@ -130,15 +130,31 @@ $( document ).ready(
             {
                 line = lines[i];
                 
+                // Change some of the line
+                var split = line.split("");
+                line = "";
+                for (var j = 0; j < split.length; j++)
+                {
+                    if ( Math.random() > bgNumberChangePerc )
+                    {
+                        if ( split[j] == "0" )
+                            split[j] = 1;
+                        else if ( split[j] == "1" )
+                            split[j] = 0;
+                    }
+                    
+                    line = line.concat( split[j] );
+                }
+                
+                
                 alpha = alphaMin;
                 if ( i > lineAlphaMax-alphas.length  &&  i < lineAlphaMax+alphas.length )
                     alpha = alphas[ i + (alphas.length - 1 - lineAlphaMax) ];
                 
-                ctx.fillStyle = "rgba(50, 50, 50, " + alpha + ")";
-                //ctx.fillStyle = "rgba(50, 50, 50, " + alpha + ")";
+                ctx.fillStyle = "rgba(150, 50, 50, " + alpha + ")";
                 ctx.fillText(
                     line,
-                    0,   // X coord
+                    0,            // X coord
                     i * fontSize  // Y coord
                 );
             }
@@ -147,7 +163,7 @@ $( document ).ready(
         setInterval(
             draw,
             33
-        );
+        );// tODO fixed framerate for everything
         
         
         /*
