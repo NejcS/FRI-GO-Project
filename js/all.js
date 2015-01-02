@@ -1,6 +1,6 @@
 
 /*
-// This loads after everything is loaded (including images)
+// Starts after everything is loaded (including images)
 $(window).bind("load",
     function()
     {
@@ -8,7 +8,7 @@ $(window).bind("load",
 );
 */
 
-// Starts after document is ready.
+// Starts after document is ready
 $( document ).ready(
     function()
     {
@@ -25,7 +25,8 @@ $( document ).ready(
         c.width  = window.innerWidth;
         c.height = window.innerHeight;
         
-        var bg = $("#bg");
+        var bg = $( "#bg" );
+        var bgColor = $( "body" ).css( "background-color" );
         
         // The characters
         var chars = "01";
@@ -97,6 +98,30 @@ $( document ).ready(
             return arr
         }
         
+        function drawLineOfText(string, posX, posY, fontCharWidth, bgColor)
+        {
+            string = ' ' + string + ' ';
+            
+            // Draws a black rectangle so there are no bg nmbers behind the text
+            ctx.beginPath();
+            ctx.rect(
+                posX * fontCharWidth,
+                ( posY - 1 ) * fontSize * 1.0075,  // 1.0075 is a correction
+                string.length * fontCharWidth,
+                1 * fontSize
+            );
+            ctx.fillStyle = bgColor;
+            ctx.fill();
+            
+            ctx.fillStyle = "rgba(250, 240, 50, 1.0)";
+            ctx.fillText(
+                string,
+                posX * fontCharWidth,
+                posY * fontSize
+            );
+        }
+        
+        
         var alphaMin = 0.6;
         var alphaMax = 0.82;
         var alpha = alphaMax;
@@ -107,7 +132,6 @@ $( document ).ready(
         
         var alphas = generateAlphas( alphaMin, alphaMax, alphaDelta );
         //console.log(alphas);
-        
         
         function draw()
         {
@@ -130,7 +154,7 @@ $( document ).ready(
             {
                 line = lines[i];
                 
-                // Change some of the line
+                // Change numbers in the line
                 var split = line.split("");
                 line = "";
                 for (var j = 0; j < split.length; j++)
@@ -146,7 +170,27 @@ $( document ).ready(
                     line = line.concat( split[j] );
                 }
                 
+                /*// TEST font (in line)
+                if ( i == 20 )
+                {
+                    var lineTemp1 = line.substr( 0, 50 );
+                    var lineTemp2 = line.substr( 50, line.length );
+                    
+                    var string = '<div id="oneandonly"><span><a>neki text</a></span></div>';
+                    
+                    lineTemp1 += " ";
+                    lineTemp1 += string;
+                    lineTemp1 += " ";
+                    lineTemp1 += lineTemp2.substr(
+                                     string.length,
+                                     lineTemp2.length
+                                 );
+                    
+                    line = lineTemp1;
+                }*/
                 
+                
+                // Draw the line
                 alpha = alphaMin;
                 if ( i > lineAlphaMax-alphas.length  &&  i < lineAlphaMax+alphas.length )
                     alpha = alphas[ i + (alphas.length - 1 - lineAlphaMax) ];
@@ -158,12 +202,26 @@ $( document ).ready(
                     i * fontSize  // Y coord
                 );
             }
+            
+            
+            // BEGIN TEST font (over line)
+            
+            var string = '<div id="oneandonly"><span><a>neki text</a></span></div>';
+            var fontCharWidth = ctx.measureText("0").width;
+            drawLineOfText(
+                string,
+                50, 21,
+                fontCharWidth,
+                bgColor
+            );
+            
+            // END TEST font (over line)
         }
         
         setInterval(
             draw,
-            33
-        );// tODO fixed framerate for everything
+            1000/30  // TODO RAF method, using fixed fps for everything
+        );
         
         
         /*

@@ -120,9 +120,9 @@ body
 
 .bg
 {
-    background-color: #f00;
+    /*background-color: #f00;
     color: #323232;
     font-family: "Inconsolata", "Georgia", serif;
-    word-wrap: break-word;
+    word-wrap: break-word;*/
     zoom: 1;
 }
