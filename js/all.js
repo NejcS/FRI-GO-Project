@@ -97,8 +97,8 @@ $( document ).ready(
             return arr
         }
         
-        var alphaMin = 0.5;
-        var alphaMax = 1.0;
+        var alphaMin = 0.6;
+        var alphaMax = 0.82;
         var alpha = alphaMax;
         var alphaDelta = 0.02;
         var lineAlphaMax = 0;
@@ -151,7 +151,7 @@ $( document ).ready(
                 if ( i > lineAlphaMax-alphas.length  &&  i < lineAlphaMax+alphas.length )
                     alpha = alphas[ i + (alphas.length - 1 - lineAlphaMax) ];
                 
-                ctx.fillStyle = "rgba(150, 50, 50, " + alpha + ")";
+                ctx.fillStyle = "rgba(70, 70, 70, " + alpha + ")";
                 ctx.fillText(
                     line,
                     0,            // X coord
