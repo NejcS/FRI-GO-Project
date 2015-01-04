@@ -15,6 +15,7 @@ $( document ).ready(
         //console.log("js ready!");
         
         
+        // The default viewport width and height
         var defaultWidth  = 1920;
         var defaultHeight = 1080;
         
@@ -22,8 +23,9 @@ $( document ).ready(
         var c = document.getElementById("c");
         var ctx = c.getContext("2d");
         
-        c.width  = window.innerWidth;
-        c.height = window.innerHeight;
+        c.width  = defaultWidth;
+        c.height = defaultHeight;
+        
         
         var bg = $( "#bg" );
         var bgColor = $( "body" ).css( "background-color" );
@@ -40,7 +42,8 @@ $( document ).ready(
         {
             ctx.font = fontSize + "px" + " " + fontType;
             
-            var num = Math.ceil( c.width / ctx.measureText("0").width );
+            //var num = Math.ceil( c.width / ctx.measureText("0").width );
+            var num = Math.ceil( defaultWidth / ctx.measureText("0").width );
             num++;  // So it covers the right edge
             //console.log( num );
             
@@ -69,7 +72,8 @@ $( document ).ready(
         
         var getNumLines = function()
         {
-            return Math.ceil( c.height / ( fontSize + fontLineSpacing ) );
+            //return Math.ceil( c.height / ( fontSize + fontLineSpacing ) );
+            return Math.ceil( defaultHeight / ( fontSize + fontLineSpacing ) );
         }
         
         
@@ -245,16 +249,24 @@ $( document ).ready(
                 
                 // Resize the scene to fit the window
                 
-                var ratioWidth  = window.innerWidth  / defaultWidth;
+                //var ratioWidth  = window.innerWidth  / defaultWidth;
                 var ratioHeight = window.innerHeight / defaultHeight;
-                console.log(ratioWidth + " " + ratioHeight);
+                //console.log(ratioWidth + " " + ratioHeight);
                 
-                var ratio = ratioWidth;
-                //if ( ratioWidth < ratioHeight )
-                //    ratio = ratioHeight;
+                // Correct to one decimal point
+                // Round so as to get rid off artifacts when resizing
+                ratioHeight = Math.round( ratioHeight * 10 ) / 10;
+                ratioHeight += 0.1;  // So it covers the bottom edge
+                //console.log( ratioHeight );
                 
-                bg.css(
-                    "zoom", ratio
+                // Get the margin from the left
+                var marginLeft = ( window.innerWidth - defaultWidth*ratioHeight ) / 2;
+                
+                $( "#c" ).css(
+                    {
+                        "zoom": ratioHeight,
+                        "marginLeft": marginLeft + "px"
+                    }
                 );
             }
         );
